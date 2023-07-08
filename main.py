@@ -2,7 +2,7 @@ import mysql.connector as mycon
 import random
 import csv
 import time
-import sys
+import datetime
 from tabulate import tabulate
 import matplotlib.pyplot as plt
 #To connect to the database
@@ -655,17 +655,8 @@ def set_completed_tasks():
 
         set_completed_tasks()
     if rows[choice][4] == None:
-        time.sleep(0.18)
-        print("╔═══════════════════════════════════════╗")
-        print("║You can't complete this task as it has ║")
-        print("║            no points set.             ║")
-        print("╚═══════════════════════════════════════╝")
-
-        time.sleep(0.18)
-        print("╔═══════════════════════════════════════╗")
-        print("║       Please set points first.        ║")
-        print("╚═══════════════════════════════════════╝")
-
+        task_id = rows[choice][0]
+        cur.execute(f"UPDATE {user_name} SET Status = 'Complete' WHERE Task_id = {task_id}")
         task_manager()
 
     task_id = rows[choice][0]
