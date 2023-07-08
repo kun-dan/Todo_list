@@ -1563,5 +1563,5 @@ def delete_all_rewards():
         print("╔═══════════════════════════════════════╗")
         print("║         File does not exist.          ║")
         print("╚═══════════════════════════════════════╝")
-
+#hi
 login_menu()
