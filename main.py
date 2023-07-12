@@ -2,7 +2,7 @@ import mysql.connector as mycon
 import random
 import csv
 import time
-import datetime
+from datetime import date
 from tabulate import tabulate
 import matplotlib.pyplot as plt
 #To connect to the database
@@ -46,6 +46,7 @@ def decrypt(encrypted_message, key):
 def signup():
     global user_name
     global access_type
+    global current_date
     while True:
         time.sleep(0.18)
         print("╔═══════════════════════════════════════╗")
@@ -245,6 +246,7 @@ def signup():
             with open('dat.csv', mode='a', newline='') as file:
                 writer = csv.writer(file)
                 writer.writerow(data)
+            current_date = date.today()
             if NeedParent_choice == "1":
                 cur.execute(f"CREATE TABLE {user_name} (Task_ID INTEGER primary key, Tasks VARCHAR(225), Due_date DATE, Status VARCHAR(20) DEFAULT 'Incomplete', Points INTEGER)")
                 cur.execute(f"INSERT INTO points VALUES ('{user_name}', 0)")
@@ -265,6 +267,7 @@ def login():
     while True:
         global user_name
         global access_type
+        global current_date
         time.sleep(0.18)
         print("╔═══════════════════════════════════════╗")
         print("║        This is the login page.        ║")
@@ -293,6 +296,9 @@ def login():
                     decrypted_password = decrypt(row[1], key)    
                     if password == decrypted_password:
                         time.sleep(0.18)
+                        current_date = date.today()
+                        cur.execute(f"UPDATE todo_list SET Status = 'Over_due' WHERE Due_date < '{current_date}'")
+                        con.commit()
                         print("╔═══════════════════════════════════════╗")
                         print("║           Login successful            ║")
                         print("╚═══════════════════════════════════════╝")
@@ -385,6 +391,7 @@ def main_menu():
     while True:
         print("╔═══════════════════════════════════════╗")
         print("║       Welcome to the Todo List!       ║")
+        print(f"║          Today is {current_date}          ║")
         time.sleep(0.5)
         print("║       Please select an option:        ║")
         time.sleep(0.18)
@@ -438,6 +445,7 @@ def task_manager():
     while True:
         print("╔═══════════════════════════════════════╗")
         print("║     This is the task manager menu     ║")
+        print(f"║          Today is {current_date}          ║")
         time.sleep(0.5)
         print("║       Please select an option:        ║")
         time.sleep(0.18)
@@ -484,6 +492,7 @@ def reward_manager():
     while True:
         print("╔═══════════════════════════════════════╗")
         print("║     This is the reward manager menu   ║")
+        print(f"║          Today is {current_date}          ║")
         time.sleep(0.5)
         print("║       Please select an option:        ║")
         time.sleep(0.18)
@@ -515,6 +524,7 @@ def reward_manager():
 def parent_menu():
     print("╔═══════════════════════════════════════╗")
     print("║         This is the parent menu       ║")
+    print(f"║          Today is {current_date}          ║")
     time.sleep(0.5)
     print("║         Please select an option:      ║")
     time.sleep(0.18)
@@ -566,6 +576,7 @@ def status():
     while True:
         print("╔═══════════════════════════════════════╗")
         print("║          This is the status menu      ║")
+        print(f"║          Today is {current_date}          ║")
         time.sleep(0.5)
         print("║          Please select an option:     ║")
         time.sleep(0.18)
