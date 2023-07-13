@@ -17,6 +17,7 @@ This is a command-line task manager application built using Python. It allows us
   - [Performance Tracking](#performance-tracking)
 - [Contributing](#contributing)
 - [License](#license)
+
 ## Features
 
 The Task Manager Application offers the following features:
@@ -52,12 +53,14 @@ The Task Manager Application offers the following features:
 
 5. Performance Tracking:
    - Users can view their task performance in the form of a bar chart.
-   - The chart shows the count of tasks based on their status (complete, overdue, etc.).
+   - The chart shows the count of tasks based on their status (incomplete, complete, overdue, etc.).
    - Performance data is retrieved from the database.
+
 
 ## Usage
 
 1. Registration and Login:
+
 - Use the application's registration feature to create a new account.
 - Log in with your username and password to access the task manager.
 
@@ -80,6 +83,7 @@ c. Switching between Parent and Child Accounts:
 - Task and reward management will be specific to the selected child account.
 
 3. Task Management:
+
 - Use the provided menu options to add, view, edit, or delete tasks.
 - Tasks can be in one of the following modes:
   - Incomplete: Tasks that are not yet completed or overdue.
@@ -89,12 +93,14 @@ c. Switching between Parent and Child Accounts:
 - View completed tasks and delete them if needed.
 
 4. Points and Rewards:
+
 - Earn points by completing tasks.
 - View your total points and available rewards.
 - Redeem rewards if you have enough points.
 - View, edit, or delete rewards as desired.
 
 5. Performance Tracking:
+
 - View your task performance in a bar chart.
 - The chart shows the count of tasks based on their status.
 - Use the menu option to access the performance chart.
@@ -102,7 +108,7 @@ c. Switching between Parent and Child Accounts:
 ## Contributing
 
 Contributions are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request.
-=
+
 ## License
 
-This project is licensed under the MIT License. 
+This project is licensed under the MIT License.
