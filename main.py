@@ -26,6 +26,11 @@ cur.execute("CREATE DATABASE Todo_list;")
 #To open the database
 cur.execute("use todo_list;")
 
+#To create the points table
+'''
+cur.execute("CREATE TABLE points (username varchar(255) NOT NULL, points integer);")
+cur.commit()
+'''
 #To encrypt
 def encrypt(message):
     key = random.randint(1, 10)
@@ -297,8 +302,6 @@ def login():
                     if password == decrypted_password:
                         time.sleep(0.18)
                         current_date = date.today()
-                        cur.execute(f"UPDATE todo_list SET Status = 'Over_due' WHERE Due_date < '{current_date}'")
-                        con.commit()
                         print("╔═══════════════════════════════════════╗")
                         print("║           Login successful            ║")
                         print("╚═══════════════════════════════════════╝")
@@ -307,6 +310,7 @@ def login():
                             user_name = row[4]
                         else:
                             access_type = "Child"
+                        update_overdue_tasks()
                         main_menu()
                         break
                     else:
@@ -351,7 +355,7 @@ def login_menu():
         print("╔═══════════════════════════════════════╗")
         print("║       Welcome to the Main Menu!       ║")
         print("╚═══════════════════════════════════════╝")
-        time.sleep(0.5)
+        time.sleep(0.2)
         print("╔═══════════════════════════════════════╗")
         print("║       Please select an option:        ║")
         print("╚═══════════════════════════════════════╝")
@@ -392,7 +396,7 @@ def main_menu():
         print("╔═══════════════════════════════════════╗")
         print("║       Welcome to the Todo List!       ║")
         print(f"║          Today is {current_date}          ║")
-        time.sleep(0.5)
+        time.sleep(0.2)
         print("║       Please select an option:        ║")
         time.sleep(0.18)
         print("║          1. Task manager              ║")
@@ -446,22 +450,24 @@ def task_manager():
         print("╔═══════════════════════════════════════╗")
         print("║     This is the task manager menu     ║")
         print(f"║          Today is {current_date}          ║")
-        time.sleep(0.5)
+        time.sleep(0.2)
         print("║       Please select an option:        ║")
         time.sleep(0.18)
         print("║            1. View Tasks              ║")
+        
+        print("║            2. View Overdue Tasks      ║ ")
         time.sleep(0.18)
-        print("║            2. Complete Tasks          ║")
+        print("║            3. Complete Tasks          ║")
         time.sleep(0.18)
-        print("║            3. Add Task                ║")
+        print("║            4. Add Task                ║")
         time.sleep(0.18)
-        print("║            4. Edit Task               ║")
+        print("║            5. Edit Task               ║")
         time.sleep(0.18)
-        print("║            5. Delete Task             ║")
+        print("║            6. Delete Task             ║")
         time.sleep(0.18)
-        print("║            6. Delete All Tasks        ║")
+        print("║            7. Delete All Tasks        ║")
         time.sleep(0.18)
-        print("║            7. Back To Main Menu       ║")
+        print("║            8. Back To Main Menu       ║")
         time.sleep(0.18)
         print("║          Enter your choice :          ║")
         print("╚═══════════════════════════════════════╝")
@@ -470,16 +476,18 @@ def task_manager():
         if choice == "1":
             view_tasks()
         elif choice == "2":
-            set_completed_tasks()
+            view_overdue()
         elif choice == "3":
-            add_task()
+            set_completed_tasks()
         elif choice == "4":
-            edit_task()
+            add_task()
         elif choice == "5":
-            delete_task()
+            edit_task()
         elif choice == "6":
-            delete_all_tasks()
+            delete_task()
         elif choice == "7":
+            delete_all_tasks()
+        elif choice == "8":
             main_menu()
         else:
             time.sleep(0.18)
@@ -493,7 +501,7 @@ def reward_manager():
         print("╔═══════════════════════════════════════╗")
         print("║     This is the reward manager menu   ║")
         print(f"║          Today is {current_date}          ║")
-        time.sleep(0.5)
+        time.sleep(0.2)
         print("║       Please select an option:        ║")
         time.sleep(0.18)
         print("║          1. View Rewards              ║")
@@ -525,7 +533,7 @@ def parent_menu():
     print("╔═══════════════════════════════════════╗")
     print("║         This is the parent menu       ║")
     print(f"║          Today is {current_date}          ║")
-    time.sleep(0.5)
+    time.sleep(0.2)
     print("║         Please select an option:      ║")
     time.sleep(0.18)
     print("║           1. Add/Change Points        ║")
@@ -577,7 +585,7 @@ def status():
         print("╔═══════════════════════════════════════╗")
         print("║          This is the status menu      ║")
         print(f"║          Today is {current_date}          ║")
-        time.sleep(0.5)
+        time.sleep(0.2)
         print("║          Please select an option:     ║")
         time.sleep(0.18)
         print("║     1. Look at performances graph     ║")
@@ -611,7 +619,8 @@ def status():
 
 
 def view_tasks():
-        time.sleep(0.5)
+        update_overdue_tasks()
+        time.sleep(0.2)
         cur.execute(f"SELECT Tasks, Due_date, Points, Status FROM {user_name} WHERE Status = 'Incomplete' ORDER BY Due_date")
         rows = cur.fetchall()
         columns = [desc[0] for desc in cur.description]
@@ -634,8 +643,8 @@ def view_tasks():
                 print("╚═══════════════════════════════════════╝")
 
 def set_completed_tasks():
-    time.sleep(0.5)
-    cur.execute(f"SELECT * FROM {user_name} WHERE Status = 'Incomplete' ORDER BY Due_date")
+    time.sleep(0.2)
+    cur.execute(f"SELECT * FROM {user_name} WHERE Status in ('Incomplete','OVERDUE') ORDER BY Due_date")
     rows = cur.fetchall()
     columns = [desc[0] for desc in cur.description]
     print(tabulate(rows, headers=columns, tablefmt='double_grid'))
@@ -707,7 +716,7 @@ def set_completed_tasks():
             print("╚═══════════════════════════════════════╝")
 
 def add_task():
-    time.sleep(0.5)
+    time.sleep(0.2)
     print("╔═══════════════════════════════════════╗")
     print("║           Enter the task:             ║")
     print("╚═══════════════════════════════════════╝")
@@ -805,7 +814,7 @@ def add_task():
                 print("╚═══════════════════════════════════════╝")
 
 def edit_task():
-    time.sleep(0.5)
+    time.sleep(0.2)
     cur.execute(f"SELECT * FROM {user_name} ORDER BY Due_date")
     rows = cur.fetchall()
     columns = [desc[0] for desc in cur.description]
@@ -897,7 +906,7 @@ def edit_task():
             print("╚═══════════════════════════════════════╝")
 
 def delete_task():
-    time.sleep(0.5)
+    time.sleep(0.2)
     cur.execute(f"SELECT * FROM {user_name} ORDER BY Due_date")
     rows = cur.fetchall()
     columns = [desc[0] for desc in cur.description]
@@ -989,7 +998,7 @@ def delete_task():
     delete_task()
 
 def add_points():
-    time.sleep(0.5)
+    time.sleep(0.2)
     cur.execute(f"SELECT * FROM {user_name} WHERE Status = 'Incomplete'")
     rows = cur.fetchall()
     columns = [desc[0] for desc in cur.description]
@@ -1056,7 +1065,7 @@ def add_points():
             print("╚═══════════════════════════════════════╝")
 
 def delete_child():
-    time.sleep(0.5)
+    time.sleep(0.2)
     with open('dat.csv', 'r') as file:
         reader = csv.reader(file)
         rows = list(reader)
@@ -1102,7 +1111,7 @@ def delete_child():
 
 
 def delete_parent():
-    time.sleep(0.5)
+    time.sleep(0.2)
     print("╔═══════════════════════════════════════╗")
     print("║If like to delete your child and parent║")
     print("║ accounts, you should delete the child ║")
@@ -1152,7 +1161,7 @@ def delete_parent():
     delete_parent()
 
 def add_reward():
-    time.sleep(0.5)
+    time.sleep(0.2)
     print("╔═══════════════════════════════════════╗")
     print("║        Enter the reward name:         ║")
     print("╚═══════════════════════════════════════╝")
@@ -1214,7 +1223,7 @@ def add_reward():
             print("╚═══════════════════════════════════════╝")
 
 def view_rewards():
-    time.sleep(0.5)
+    time.sleep(0.2)
     reward_file = f"rewards/{user_name}.txt"
     try:
         file = open(reward_file, 'r')
@@ -1255,7 +1264,7 @@ def view_rewards():
             print("╚═══════════════════════════════════════╝")
 
 def claim_rewards():
-    time.sleep(0.5)
+    time.sleep(0.2)
     reward_file = f"rewards/{user_name}.txt"
     try:
         with open(reward_file, mode='r') as file:
@@ -1358,7 +1367,7 @@ def deduct_points(points):
     con.commit()
 
 def view_performances():
-    time.sleep(0.5)
+    time.sleep(0.2)
     cur.execute(f"SELECT Status, COUNT(*) as Count FROM {user_name} GROUP BY Status")
     rows = cur.fetchall()
     statuses = [row[0] for row in rows]
@@ -1371,7 +1380,7 @@ def view_performances():
     plt.show()
 
 def view_completed_tasks():
-    time.sleep(0.5)
+    time.sleep(0.2)
     cur.execute(f"SELECT Tasks, Due_date, Points, Status FROM {user_name} WHERE Status = 'Complete' ORDER BY Due_date")
     rows = cur.fetchall()
     columns = [desc[0] for desc in cur.description]
@@ -1386,7 +1395,7 @@ def view_completed_tasks():
 
         choice = input("INPUT: ")
         if choice == "1":
-            main_menu()
+            status()
             break
         else:
             time.sleep(0.18)
@@ -1396,7 +1405,7 @@ def view_completed_tasks():
             print("╚═══════════════════════════════════════╝")
 
 def delete_all_tasks():
-    time.sleep(0.5)
+    time.sleep(0.2)
     print("╔═══════════════════════════════════════╗")
     print("║   Are you sure you want to delete     ║")
     print("║             all tasks?                ║")
@@ -1423,7 +1432,7 @@ def delete_all_tasks():
         delete_all_tasks()
 
 def edit_reward():
-    time.sleep(0.5)
+    time.sleep(0.2)
     reward_file = f"rewards/{user_name}.txt"
     try:
         with open(reward_file, 'r') as file:
@@ -1492,7 +1501,7 @@ def edit_reward():
         print("╚═══════════════════════════════════════╝")
 
 def delete_reward():
-    time.sleep(0.5)
+    time.sleep(0.2)
     reward_file = f"rewards/{user_name}.txt"
     try:
         with open(reward_file, 'r') as file:
@@ -1551,7 +1560,7 @@ def delete_reward():
         print("╚═══════════════════════════════════════╝")
 
 def delete_all_rewards():
-    time.sleep(0.5)
+    time.sleep(0.2)
     reward_file = f"rewards/{user_name}.txt"
     try:
         with open(reward_file, 'w') as file:
@@ -1565,5 +1574,38 @@ def delete_all_rewards():
         print("╔═══════════════════════════════════════╗")
         print("║         File does not exist.          ║")
         print("╚═══════════════════════════════════════╝")
+def view_overdue():
+    time.sleep(0.2)
+    cur.execute(f"SELECT Tasks, Due_date, Points, Status FROM {user_name} WHERE Status = 'OVERDUE' ORDER BY Due_date")
+    rows = cur.fetchall()
+    columns = [desc[0] for desc in cur.description]
+    time.sleep(0.18)
+    print(tabulate(rows, headers=columns, tablefmt='double_grid'))
+    while True:
+        time.sleep(0.18)
+        print("╔═══════════════════════════════════════╗")
+        print("║Would you like to go back to the menu? ║")
+        print("║               (1 - yes):              ║")
+        print("╚═══════════════════════════════════════╝")
+
+        choice = input("INPUT: ")
+        if choice == "1":
+            task_manager()
+            break
+        else:
+            time.sleep(0.18)
+            print("╔═══════════════════════════════════════╗")
+            print("║   Invalid task number. Please enter   ║")
+            print("║                 1                     ║")
+            print("╚═══════════════════════════════════════╝")
+def update_overdue_tasks():
+    cur.execute(f"SELECT COUNT(*) FROM {user_name}")
+    count = cur.fetchone()[0]
+
+    if count == 0:
+        return
+    else:
+        cur.execute(f"UPDATE {user_name} SET Status = 'OVERDUE' WHERE Due_date < '{current_date}'")
+        con.commit()
 
 login_menu()
