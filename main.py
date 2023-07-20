@@ -352,6 +352,12 @@ def login():
 
 def login_menu():
     while True:
+        print("  ██████╗ ██╗   ██╗     ██████╗  ██████╗ ")
+        print("  ██╔══██╗╚██╗ ██╔╝     ██╔══██╗██╔═══██╗")
+        print("  ██████╔╝ ╚████╔╝█████╗██║  ██║██║   ██║")
+        print("  ██╔═══╝   ╚██╔╝ ╚════╝██║  ██║██║   ██║")
+        print("  ██║        ██║        ██████╔╝╚██████╔╝")
+        print("  ╚═╝        ╚═╝        ╚═════╝  ╚═════╝ ")
         print("╔═══════════════════════════════════════╗")
         print("║       Welcome to the Main Menu!       ║")
         print("╚═══════════════════════════════════════╝")
@@ -380,9 +386,15 @@ def login_menu():
             break
         elif choice == "3":
             print("╔═══════════════════════════════════════╗")
-            print("║   Thank you for using the Todo List.  ║")
-            print("║              Goodbye!                 ║")
+            print("║       Thank you for using PyDO.       ║")
+            print("║  Stay organized and stay productive!  ║")
             print("╚═══════════════════════════════════════╝")
+            print(" ██████╗  ██████╗  ██████╗ ██████╗ ██████╗ ██╗   ██╗███████╗██╗")
+            print("██╔════╝ ██╔═══██╗██╔═══██╗██╔══██╗██╔══██╗╚██╗ ██╔╝██╔════╝██║")
+            print("██║  ███╗██║   ██║██║   ██║██║  ██║██████╔╝ ╚████╔╝ █████╗  ██║")
+            print("██║   ██║██║   ██║██║   ██║██║  ██║██╔══██╗  ╚██╔╝  ██╔══╝  ╚═╝")
+            print("╚██████╔╝╚██████╔╝╚██████╔╝██████╔╝██████╔╝   ██║   ███████╗██╗")
+            print(" ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝   ╚══════╝╚═╝")
 
             quit()
         else:
@@ -394,7 +406,7 @@ def login_menu():
 def main_menu():
     while True:
         print("╔═══════════════════════════════════════╗")
-        print("║       Welcome to the Todo List!       ║")
+        print("║       Welcome to the PyDO!            ║")
         print(f"║          Today is {current_date}          ║")
         time.sleep(0.2)
         print("║       Please select an option:        ║")
@@ -664,7 +676,6 @@ def set_completed_tasks():
         print("║ Invalid task number. Please enter a   ║")
         print("║                number.                ║")
         print("╚═══════════════════════════════════════╝")
-
         set_completed_tasks()
 
     if choice < 0 or choice >= len(rows):
@@ -678,18 +689,22 @@ def set_completed_tasks():
         task_id = rows[choice][0]
         cur.execute(f"UPDATE {user_name} SET Status = 'Complete' WHERE Task_id = {task_id}")
         task_manager()
-
-    task_id = rows[choice][0]
-    task_points = int(rows[choice][4])
-    cur.execute(f"SELECT points FROM points WHERE username = '{user_name}'")
-    current_points = int(cur.fetchone()[0])
-    cur.execute(f"UPDATE {user_name} SET Status = 'Complete' WHERE Task_id = {task_id}")
-    cur.execute(f"UPDATE points SET points = {current_points + task_points} WHERE username = '{user_name}'")
-    con.commit()
-    time.sleep(0.18)
-    print("╔═══════════════════════════════════════╗")
-    print("║ Task marked as complete successfully! ║")
-    print("╚═══════════════════════════════════════╝")
+        time.sleep(0.18)
+        print("╔═══════════════════════════════════════╗")
+        print("║ Task marked as complete successfully! ║")
+        print("╚═══════════════════════════════════════╝")
+    else:
+        task_id = rows[choice][0]
+        task_points = int(rows[choice][4])
+        cur.execute(f"SELECT points FROM points WHERE username = '{user_name}'")
+        current_points = int(cur.fetchone()[0])
+        cur.execute(f"UPDATE {user_name} SET Status = 'Complete' WHERE Task_id = {task_id}")
+        cur.execute(f"UPDATE points SET points = {current_points + task_points} WHERE username = '{user_name}'")
+        con.commit()
+        time.sleep(0.18)
+        print("╔═══════════════════════════════════════╗")
+        print("║ Task marked as complete successfully! ║")
+        print("╚═══════════════════════════════════════╝")
 
 
     while True:
@@ -706,7 +721,7 @@ def set_completed_tasks():
             set_completed_tasks()
             break
         elif choice == "2":
-            main_menu()
+            task_manager()
             break
         else:
             time.sleep(0.18)
@@ -1055,7 +1070,7 @@ def add_points():
             add_points()
             break
         elif choice == "2":
-            main_menu()
+            parent_menu()
             break
         else:
             time.sleep(0.18)
@@ -1277,7 +1292,7 @@ def claim_rewards():
             print("╔═══════════════════════════════════════╗")
             print("║        No reward available yet.       ║")
             print("╚═══════════════════════════════════════╝")
-            main_menu()
+            reward_manager()
         time.sleep(0.18)
         print("╔═══════════════════════════════════════╗")
         print("║          Available Rewards:           ║")
@@ -1419,10 +1434,9 @@ def delete_all_tasks():
         print("╔═══════════════════════════════════════╗")
         print("║     All tasks deleted successfully.   ║")
         print("╚═══════════════════════════════════════╝")
-
-        main_menu()
+        task_manager()
     elif choice == "2":
-        main_menu()
+        task_manager()
     else:
         time.sleep(0.18)
         print("╔═══════════════════════════════════════╗")
@@ -1486,7 +1500,7 @@ def edit_reward():
                 print("╚═══════════════════════════════════════╝")
                 view_rewards()
         elif choice.lower() == 'q':
-            main_menu()
+            parent_menu()
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -1537,7 +1551,7 @@ def delete_reward():
                 print("║         deleted successfully.         ║")
                 print("╚═══════════════════════════════════════╝")
 
-                view_rewards()
+                parent_menu()
             else:
                 time.sleep(0.18)
                 print("╔═══════════════════════════════════════╗")
@@ -1545,7 +1559,7 @@ def delete_reward():
                 print("╚═══════════════════════════════════════╝")
                 view_rewards()
         elif choice.lower() == 'q':
-            main_menu()
+            parent_menu()
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -1569,7 +1583,7 @@ def delete_all_rewards():
         print("║   All rewards deleted successfully.   ║")
         print("╚═══════════════════════════════════════╝")
 
-        view_rewards()
+        parent_menu()
     except FileNotFoundError:
         print("╔═══════════════════════════════════════╗")
         print("║         File does not exist.          ║")
@@ -1598,10 +1612,10 @@ def view_overdue():
             print("║   Invalid task number. Please enter   ║")
             print("║                 1                     ║")
             print("╚═══════════════════════════════════════╝")
+
 def update_overdue_tasks():
     cur.execute(f"SELECT COUNT(*) FROM {user_name}")
     count = cur.fetchone()[0]
-
     if count == 0:
         return
     else:

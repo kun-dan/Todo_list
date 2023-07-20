@@ -1,30 +1,21 @@
-# Task Manager Application
+# PyDo
 
-This is a command-line task manager application built using Python. It allows users to manage their tasks, track their performance, and redeem rewards based on their completed tasks. The application includes a child and parent account system, enabling parents to manage tasks and rewards for their children.
+PyDo is a command-line task manager application built using Python. It allows users to manage their tasks, track their performance, and redeem rewards based on their completed tasks. The application includes a child and parent account system, enabling parents to manage tasks and rewards for their children.
 
 ## Table of Contents
 
 - [Features](#features)
-- [Installation](#installation)
 - [Usage](#usage)
-  - [Registration and Login](#registration-and-login)
-  - [Child and Parent Accounts](#child-and-parent-accounts)
-    - [Creating a Parent Account](#creating-a-parent-account)
-    - [Creating a Child Account](#creating-a-child-account)
-    - [Switching between Parent and Child Accounts](#switching-between-parent-and-child-accounts)
-  - [Task Management](#task-management)
-  - [Points and Rewards](#points-and-rewards)
-  - [Performance Tracking](#performance-tracking)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## Features
 
-The Task Manager Application offers the following features:
+PyDo offers the following features:
 
 1. User Authentication:
    - Users can create an account and log in to the application.
-   - Usernames and passwords are securely stored in a PostgreSQL database.
+   - Usernames and passwords are securely stored in a mySQL database.
 
 2. Child and Parent Accounts:
    - Parents can create child accounts under their parent account.
@@ -61,26 +52,27 @@ The Task Manager Application offers the following features:
 
 1. Registration and Login:
 
+- Parent accounts only work when there is already a Child Account.
 - Use the application's registration feature to create a new account.
 - Log in with your username and password to access the task manager.
 
 2. Child and Parent Accounts:
 
-a. Creating a Parent Account:
-- Parents can create a parent account by selecting the "Create Parent Account" option during registration.
-- Provide the required details to create the parent account.
+   a. Creating a Parent Account:
+   - Parents can create a parent account by selecting the "Create Parent Account" option during registration.
+   - Provide the required details to create the parent account.
 
-b. Creating a Child Account:
-- Parents can create child accounts from their parent account.
-- Log in to the parent account and select the "Create Child Account" option.
-- Provide the required details to create the child account.
-- Child accounts are linked to the parent account for management purposes.
+   b. Creating a Child Account:
+   - Parents can create child accounts from their parent account.
+   - Log in to the parent account and select the "Create Child Account" option.
+   - Provide the required details to create the child account.
+   - Child accounts are linked to the parent account for management purposes.
 
-c. Switching between Parent and Child Accounts:
-- Parents can switch between their parent account and their children's accounts.
-- After logging in as a parent, select the "Switch to Child Account" option.
-- Choose the child account you want to manage from the available options.
-- Task and reward management will be specific to the selected child account.
+   c. Switching between Parent and Child Accounts:
+   - Parents can switch between their parent account and their children's accounts.
+   - After logging in as a parent, select the "Switch to Child Account" option.
+   - Choose the child account you want to manage from the available options.
+   - Task and reward management will be specific to the selected child account.
 
 3. Task Management:
 
