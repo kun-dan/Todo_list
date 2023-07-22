@@ -2,7 +2,7 @@ import mysql.connector as mycon
 import random
 import csv
 import time
-from datetime import date
+from datetime import date, timedelta
 from tabulate import tabulate
 import matplotlib.pyplot as plt
 #To connect to the database
@@ -406,7 +406,7 @@ def login_menu():
 def main_menu():
     while True:
         print("╔═══════════════════════════════════════╗")
-        print("║       Welcome to the PyDO!            ║")
+        print("║          Welcome to the PyDO!         ║")
         print(f"║          Today is {current_date}          ║")
         time.sleep(0.2)
         print("║       Please select an option:        ║")
@@ -735,7 +735,6 @@ def add_task():
     print("╔═══════════════════════════════════════╗")
     print("║           Enter the task:             ║")
     print("╚═══════════════════════════════════════╝")
-
     task = input("INPUT:")
     if access_type == "Child":
         while True:
@@ -751,7 +750,6 @@ def add_task():
                         print("╔═══════════════════════════════════════╗")
                         print("║       Enter a date (YYYY-MM-DD):      ║")
                         print("╚═══════════════════════════════════════╝")
-
                         date_input = input("INPUT: ")
                         cur.execute(f"INSERT INTO {user_name} (Task_id ,Tasks, Due_date) VALUES ({task_id},'{task}', '{date_input}')")
                         con.commit()
@@ -761,14 +759,36 @@ def add_task():
                         print("╚═══════════════════════════════════════╝")
                         break
             except mycon.errors.DataError:
+                current_date = date.today()
+                if date_input.lower() == "today":
+                    date_input = current_date
+                elif date_input.lower() == "tomorrow":
+                    date_input = current_date + timedelta(days=1)
+                elif date_input.lower().startswith("in"):
+                    day = date_input[2:].strip() 
+                    if day.isdigit():
+                        date_input = current_date + timedelta(days=int(day))
+                    else:
+                        time.sleep(0.18)
+                        print("╔═══════════════════════════════════════╗")
+                        print("║      Invalid number. Please enter     ║")
+                        print("║              a integer                ║")
+                        print("╚═══════════════════════════════════════╝")
+                        continue
+                else:
+                    time.sleep(0.18)
+                    print("╔═══════════════════════════════════════╗")
+                    print("║ Invalid date format. Please enter a   ║")
+                    print("║    date in the format YYYY-MM-DD.     ║")
+                    print("╚═══════════════════════════════════════╝")
+                    continue
+                cur.execute(f"INSERT INTO {user_name} (Task_id ,Tasks, Due_date, Points) VALUES ({task_id},'{task}', '{date_input}', {points})")
+                con.commit()
                 time.sleep(0.18)
                 print("╔═══════════════════════════════════════╗")
-                print("║ Invalid date format. Please enter a   ║")
-                print("║    date in the format YYYY-MM-DD.     ║")
+                print("║       Date inserted successfully!     ║")
                 print("╚═══════════════════════════════════════╝")
-                continue
-            break
-
+                break
     elif access_type == "Parent":
         time.sleep(0.18)
         print("╔═══════════════════════════════════════╗")
@@ -787,7 +807,6 @@ def add_task():
                         print("╔═══════════════════════════════════════╗")
                         print("║       Enter a date (YYYY-MM-DD):      ║")
                         print("╚═══════════════════════════════════════╝")
-
                         date_input = input("INPUT: ")
                         cur.execute(f"INSERT INTO {user_name} (Task_id ,Tasks, Due_date, Points) VALUES ({task_id},'{task}', '{date_input}', {points})")
                         con.commit()
@@ -795,16 +814,38 @@ def add_task():
                         print("╔═══════════════════════════════════════╗")
                         print("║       Date inserted successfully!     ║")
                         print("╚═══════════════════════════════════════╝")
-
                         break
             except mycon.errors.DataError:
+                current_date = date.today()
+                if date_input.lower() == "today":
+                    date_input = current_date
+                elif date_input.lower() == "tomorrow":
+                    date_input = current_date + timedelta(days=1)
+                elif date_input.lower().startswith("in"):
+                    day = date_input[2:].strip() 
+                    if day.isdigit():
+                        date_input = current_date + timedelta(days=int(day))
+                    else:
+                        time.sleep(0.18)
+                        print("╔═══════════════════════════════════════╗")
+                        print("║      Invalid number. Please enter     ║")
+                        print("║              a integer                ║")
+                        print("╚═══════════════════════════════════════╝")
+                        continue
+                else:
+                    time.sleep(0.18)
+                    print("╔═══════════════════════════════════════╗")
+                    print("║ Invalid date format. Please enter a   ║")
+                    print("║    date in the format YYYY-MM-DD.     ║")
+                    print("╚═══════════════════════════════════════╝")
+                    continue
+                cur.execute(f"INSERT INTO {user_name} (Task_id ,Tasks, Due_date, Points) VALUES ({task_id},'{task}', '{date_input}', {points})")
+                con.commit()
                 time.sleep(0.18)
                 print("╔═══════════════════════════════════════╗")
-                print("║ Invalid date format. Please enter a   ║")
-                print("║    date in the format YYYY-MM-DD.     ║")
+                print("║       Date inserted successfully!     ║")
                 print("╚═══════════════════════════════════════╝")
-                continue
-            break
+                break
     while True:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -859,7 +900,7 @@ def edit_task():
         edit_task()
     time.sleep(0.18)
     print("╔═══════════════════════════════════════╗")
-    print("║         Enter the new task:           ║")
+    print("║      Enter the new name for task      ║")
     print("╚═══════════════════════════════════════╝")
 
     new_task = input("INPUT: ")
