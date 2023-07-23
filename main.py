@@ -921,7 +921,6 @@ def edit_task():
                 print("╔═══════════════════════════════════════╗")
                 print("║       Task updated successfully!      ║")
                 print("╚═══════════════════════════════════════╝")
-
                 break
             cur.execute(f"UPDATE {user_name} SET Tasks = '{new_task}', Due_date = '{new_date}' WHERE Task_ID = '{task_id}'")
             con.commit()
@@ -931,13 +930,36 @@ def edit_task():
             print("╚═══════════════════════════════════════╝")
             break
         except mycon.errors.DataError:
+            current_date = date.today()
+            if date_input.lower() == "today":
+                date_input = current_date
+            elif date_input.lower() == "tomorrow":
+                date_input = current_date + timedelta(days=1)
+            elif date_input.lower().startswith("in"):
+                day = date_input[2:].strip() 
+                if day.isdigit():
+                    date_input = current_date + timedelta(days=int(day))
+                else:
+                    time.sleep(0.18)
+                    print("╔═══════════════════════════════════════╗")
+                    print("║      Invalid number. Please enter     ║")
+                    print("║              a integer                ║")
+                    print("╚═══════════════════════════════════════╝")
+                    continue
+            else:
+                time.sleep(0.18)
+                print("╔═══════════════════════════════════════╗")
+                print("║ Invalid date format. Please enter a   ║")
+                print("║    date in the format YYYY-MM-DD.     ║")
+                print("╚═══════════════════════════════════════╝")
+                continue
+            cur.execute(f"UPDATE {user_name} SET Tasks = '{new_task}', Due_date = '{new_date}' WHERE Task_ID = '{task_id}'")
+            con.commit()
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
-            print("║  Invalid date format. Please enter a  ║")
-            print("║    date in the format YYYY-MM-DD.     ║")
+            print("║       Task updated successfully!      ║")
             print("╚═══════════════════════════════════════╝")
-
-            continue
+            break
     while True:
         time.sleep(0.18)
         print("╔═══════════════════════════════════════╗")
