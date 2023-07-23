@@ -558,16 +558,14 @@ def parent_menu():
     time.sleep(0.18)
     print("║           5. Delete All Rewards       ║")
     time.sleep(0.18)
-    print("║           6. Delete Child Account     ║")
+    print("║           6. Delete Accounts          ║")
     time.sleep(0.18)
-    print("║           7. Delete Parent Account    ║")
-    time.sleep(0.18)
-    print("║           8. Back To Main Menu        ║")
+    print("║           7. Back To Main Menu        ║")
     time.sleep(0.18)
     print("║           Enter your choice :         ║")
     print("╚═══════════════════════════════════════╝")
 
-    choice = input("`INPUT: ")
+    choice = input("INPUT: ")
 
     if choice == "1":
         add_points()
@@ -580,10 +578,8 @@ def parent_menu():
     elif choice == "5":
         delete_all_rewards()
     elif choice == "6":
-        delete_child()
+        delete_account()
     elif choice == "7":
-        delete_parent()
-    elif choice == "8":
         main_menu()
     else:
         time.sleep(0.18)
@@ -905,6 +901,7 @@ def edit_task():
 
     new_task = input("INPUT: ")
     task_id = rows[choice][0]
+    ToCheckIfOverdue = rows[choice][3]
     while True:
         try:
             time.sleep(0.18)
@@ -922,23 +919,26 @@ def edit_task():
                 print("║       Task updated successfully!      ║")
                 print("╚═══════════════════════════════════════╝")
                 break
-            cur.execute(f"UPDATE {user_name} SET Tasks = '{new_task}', Due_date = '{new_date}' WHERE Task_ID = '{task_id}'")
+            if ToCheckIfOverdue != "Oversdue":
+                cur.execute(f"UPDATE {user_name} SET Tasks = '{new_task}', Due_date = '{new_date}' WHERE Task_ID = '{task_id}'")
+                con.commit()
+                time.sleep(0.18)
+                print("╔═══════════════════════════════════════╗")
+                print("║       Task updated successfully!      ║")
+                print("╚═══════════════════════════════════════╝")
+                break
+            cur.execute(f"UPDATE {user_name} SET Tasks = '{new_task}', Due_date = '{new_date}', Status = 'Incomplete' WHERE Task_ID = '{task_id}'")
             con.commit()
-            time.sleep(0.18)
-            print("╔═══════════════════════════════════════╗")
-            print("║       Task updated successfully!      ║")
-            print("╚═══════════════════════════════════════╝")
-            break
         except mycon.errors.DataError:
             current_date = date.today()
-            if date_input.lower() == "today":
-                date_input = current_date
-            elif date_input.lower() == "tomorrow":
-                date_input = current_date + timedelta(days=1)
-            elif date_input.lower().startswith("in"):
-                day = date_input[2:].strip() 
+            if new_date.lower() == "today":
+                new_date = current_date
+            elif new_date.lower() == "tomorrow":
+                new_date = current_date + timedelta(days=1)
+            elif new_date.lower().startswith("in"):
+                day = new_date[2:].strip() 
                 if day.isdigit():
-                    date_input = current_date + timedelta(days=int(day))
+                    new_date = current_date + timedelta(days=int(day))
                 else:
                     time.sleep(0.18)
                     print("╔═══════════════════════════════════════╗")
@@ -1142,58 +1142,11 @@ def add_points():
             print("║               1 or 2                  ║")
             print("╚═══════════════════════════════════════╝")
 
-def delete_child():
-    time.sleep(0.2)
-    with open('dat.csv', 'r') as file:
-        reader = csv.reader(file)
-        rows = list(reader)
-    for row in rows:
-        if user_name in row:
-            time.sleep(0.18)
-            print("╔═══════════════════════════════════════╗")
-            print("║ Are you sure you want to delete your  ║")
-            print("║ account? This action cannot be undone.║")
-            print("║        (1. Delete, 2. Cancel):        ║")
-            print("╚═══════════════════════════════════════╝")
-
-            confirm = input("INPUT: ")
-            if confirm == "1":
-                for row in rows:
-                    if user_name == row[0]:
-                        rows.remove(row)
-                        break
-                with open('dat.csv', 'w', newline='') as file:
-                    writer = csv.writer(file)
-                    writer.writerows(rows)
-                cur.execute(f"DROP TABLE {user_name}")
-                cur.execute(f"DELETE FROM points WHERE username = '{user_name}'")
-                time.sleep(0.18)
-                print("╔═══════════════════════════════════════╗")
-                print("║     Account deleted successfully.     ║")
-                print("╚═══════════════════════════════════════╝")
-
-                login_menu()
-                break
-            elif confirm == "2":
-                time.sleep(0.18)
-                print("╔═══════════════════════════════════════╗")
-                print("║       Account deletion canceled.      ║")
-                print("╚═══════════════════════════════════════╝")
-
-                parent_menu()
-                break
-    time.sleep(0.18)
-    print("╔═══════════════════════════════════════╗")
-    print("║ Username not found. Please try again. ║")
-    print("╚═══════════════════════════════════════╝")
-
-
-def delete_parent():
+def delete_account():
     time.sleep(0.2)
     print("╔═══════════════════════════════════════╗")
-    print("║If like to delete your child and parent║")
-    print("║ accounts, you should delete the child ║")
-    print("║             account first.            ║")
+    print("║         This will delete your         ║")
+    print("║     child and parent accounts both.   ║")
     print("╚═══════════════════════════════════════╝")
 
     with open('dat.csv', 'r') as file:
@@ -1213,10 +1166,14 @@ def delete_parent():
                 for row in rows:
                     if user_name == row[4]:
                         rows.remove(row)
-                        break
+                for row in rows:
+                    if user_name == row[0]:
+                        rows.remove(row)
                 with open('dat.csv', 'w', newline='') as file:
                     writer = csv.writer(file)
                     writer.writerows(rows)
+                cur.execute(f"DROP TABLE {user_name}")
+                cur.execute(f"DELETE FROM points WHERE username = '{user_name}'")
                 time.sleep(0.18)
                 print("╔═══════════════════════════════════════╗")
                 print("║     Account deleted successfully.     ║")
@@ -1236,7 +1193,7 @@ def delete_parent():
     print("╔═══════════════════════════════════════╗")
     print("║ Username not found. Please try again. ║")
     print("╚═══════════════════════════════════════╝")
-    delete_parent()
+    delete_account()
 
 def add_reward():
     time.sleep(0.2)
@@ -1653,7 +1610,7 @@ def delete_all_rewards():
         print("╚═══════════════════════════════════════╝")
 def view_overdue():
     time.sleep(0.2)
-    cur.execute(f"SELECT Tasks, Due_date, Points, Status FROM {user_name} WHERE Status = 'OVERDUE' ORDER BY Due_date")
+    cur.execute(f"SELECT Tasks, Due_date, Points, Status FROM {user_name} WHERE Status = 'Overdue' ORDER BY Due_date")
     rows = cur.fetchall()
     columns = [desc[0] for desc in cur.description]
     time.sleep(0.18)
@@ -1682,7 +1639,7 @@ def update_overdue_tasks():
     if count == 0:
         return
     else:
-        cur.execute(f"UPDATE {user_name} SET Status = 'OVERDUE' WHERE Due_date < '{current_date}'")
+        cur.execute(f"UPDATE {user_name} SET Status = 'Overdue' WHERE Due_date < '{current_date}'")
         con.commit()
 
 login_menu()
