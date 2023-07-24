@@ -919,7 +919,7 @@ def edit_task():
                 print("║       Task updated successfully!      ║")
                 print("╚═══════════════════════════════════════╝")
                 break
-            if ToCheckIfOverdue != "Oversdue":
+            if ToCheckIfOverdue != "Overdue":
                 cur.execute(f"UPDATE {user_name} SET Tasks = '{new_task}', Due_date = '{new_date}' WHERE Task_ID = '{task_id}'")
                 con.commit()
                 time.sleep(0.18)
