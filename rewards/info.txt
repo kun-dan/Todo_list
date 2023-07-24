@@ -1,0 +1,1 @@
+This the rewards folder where all the rewards are stored at, each reward file is name after the user.
