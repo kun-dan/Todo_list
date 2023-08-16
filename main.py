@@ -48,10 +48,11 @@ def decrypt(encrypted_message, key):
         decrypted_message += decrypted_char
     return decrypted_message
 
+#The sign-ip page
 def signup():
-    global user_name
-    global access_type
-    global current_date
+    global user_name  #This is the name of the user(the database) we will work with.
+    global access_type  #This is the type of the user that has access to the database.
+    global current_date 
     while True:
         time.sleep(0.18)
         print("╔═══════════════════════════════════════╗")
@@ -94,7 +95,7 @@ def signup():
         print("║        Enter a valid username:        ║")
         print("╚═══════════════════════════════════════╝")
         user_name = input("INPUT: ")
-        with open('dat.csv', mode='r') as file:
+        with open('dat.csv', mode='r') as file:  #Read the CSV file and checks if the username already exits.
             reader = csv.reader(file)
             rows = list(reader)
             items = [row[0] for row in rows]
@@ -107,7 +108,7 @@ def signup():
 
             continue
 
-        if len(user_name) < 8 or len(user_name) > 20:
+        if len(user_name) < 8 or len(user_name) > 20:  #Checks if the username length is in between (8,20).
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
             print("║      Username should be between       ║")
@@ -125,7 +126,7 @@ def signup():
 
         password = input("INPUT: ")
 
-        if len(password) < 8 or password.isnumeric() or password.isalpha():
+        if len(password) < 8 or password.isnumeric() or password.isalpha():  #Checks if password length is in between (8,20) and has has at least 1 alphabet.
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
             print("║      Password should be between       ║")
@@ -156,7 +157,7 @@ def signup():
 
             continue
 
-        confirm_password = encrypt(password)
+        confirm_password = encrypt(password)  #Encrypt
         encrypted_password = confirm_password[0]
         key = confirm_password[1]
         break
@@ -654,6 +655,16 @@ def set_completed_tasks():
     time.sleep(0.2)
     cur.execute(f"SELECT * FROM {user_name} WHERE Status in ('Incomplete','OVERDUE') ORDER BY Due_date")
     rows = cur.fetchall()
+    if not rows:  # No incomplete or overdue tasks
+        time.sleep(0.18)
+        print("╔═══════════════════════════════════════╗")
+        print("║         You have no incomplete        ║")
+        print("║           or overdue tasks.           ║")
+        print("║        Returning to the main menu.    ║")
+        print("╚═══════════════════════════════════════╝")
+        time.sleep(0.18)
+        task_manager()
+        return
     columns = [desc[0] for desc in cur.description]
     print(tabulate(rows, headers=columns, tablefmt='double_grid'))
 
@@ -679,12 +690,10 @@ def set_completed_tasks():
         print("╔═══════════════════════════════════════╗")
         print("║          Invalid task number.         ║")
         print("╚═══════════════════════════════════════╝")
-
         set_completed_tasks()
     if rows[choice][4] == None:
         task_id = rows[choice][0]
         cur.execute(f"UPDATE {user_name} SET Status = 'Complete' WHERE Task_id = {task_id}")
-        task_manager()
         time.sleep(0.18)
         print("╔═══════════════════════════════════════╗")
         print("║ Task marked as complete successfully! ║")
@@ -712,11 +721,11 @@ def set_completed_tasks():
         print("║        2. Back to menu                ║")
         print("╚═══════════════════════════════════════╝")
 
-        choice = input("INPUT: ")
-        if choice == "1":
+        exit_choice = input("INPUT: ")
+        if exit_choice == "1":
             set_completed_tasks()
             break
-        elif choice == "2":
+        elif exit_choice == "2":
             task_manager()
             break
         else:
@@ -725,6 +734,7 @@ def set_completed_tasks():
             print("║ Invalid task number. Please enter     ║")
             print("║               1 or 2                  ║")
             print("╚═══════════════════════════════════════╝")
+            continue
 
 def add_task():
     time.sleep(0.2)
@@ -751,7 +761,7 @@ def add_task():
                         con.commit()
                         time.sleep(0.18)
                         print("╔═══════════════════════════════════════╗")
-                        print("║       Date inserted successfully!     ║")
+                        print("║       Task inserted successfully!     ║")
                         print("╚═══════════════════════════════════════╝")
                         break
             except mycon.errors.DataError:
@@ -778,13 +788,14 @@ def add_task():
                     print("║    date in the format YYYY-MM-DD.     ║")
                     print("╚═══════════════════════════════════════╝")
                     continue
-                cur.execute(f"INSERT INTO {user_name} (Task_id ,Tasks, Due_date, Points) VALUES ({task_id},'{task}', '{date_input}', {points})")
+                cur.execute(f"INSERT INTO {user_name} (Task_id ,Tasks, Due_date) VALUES ({task_id},'{task}', '{date_input}')")
                 con.commit()
                 time.sleep(0.18)
                 print("╔═══════════════════════════════════════╗")
-                print("║       Date inserted successfully!     ║")
+                print("║       Task inserted successfully!     ║")
                 print("╚═══════════════════════════════════════╝")
                 break
+            break
     elif access_type == "Parent":
         time.sleep(0.18)
         print("╔═══════════════════════════════════════╗")
@@ -808,7 +819,7 @@ def add_task():
                         con.commit()
                         time.sleep(0.18)
                         print("╔═══════════════════════════════════════╗")
-                        print("║       Date inserted successfully!     ║")
+                        print("║       Task inserted successfully!     ║")
                         print("╚═══════════════════════════════════════╝")
                         break
             except mycon.errors.DataError:
@@ -839,9 +850,10 @@ def add_task():
                 con.commit()
                 time.sleep(0.18)
                 print("╔═══════════════════════════════════════╗")
-                print("║       Date inserted successfully!     ║")
+                print("║       Task inserted successfully!     ║")
                 print("╚═══════════════════════════════════════╝")
                 break
+            break
     while True:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -851,11 +863,11 @@ def add_task():
             print("║           2. Back to menu             ║")
             print("╚═══════════════════════════════════════╝")
 
-            choice = input("INPUT: ")
-            if choice == "1":
+            exit_choice = input("INPUT: ")
+            if exit_choice == "1":
                 add_task()
                 break
-            elif choice == "2":
+            elif exit_choice == "2":
                 task_manager()
                 break
             else:
@@ -869,6 +881,16 @@ def edit_task():
     time.sleep(0.2)
     cur.execute(f"SELECT * FROM {user_name} ORDER BY Due_date")
     rows = cur.fetchall()
+    if not rows:  # No incomplete or overdue tasks
+        time.sleep(0.18)
+        print("╔═══════════════════════════════════════╗")
+        print("║               You have no             ║")
+        print("║              tasks to edit.           ║")
+        print("║       Returning to the main menu.     ║")
+        print("╚═══════════════════════════════════════╝")
+        time.sleep(0.18)
+        task_manager()
+        return
     columns = [desc[0] for desc in cur.description]
     time.sleep(0.18)
     print(tabulate(rows, headers=columns, tablefmt='double_grid'))
@@ -969,11 +991,11 @@ def edit_task():
         print("║            2. Back to menu            ║")
         print("╚═══════════════════════════════════════╝")
 
-        choice = input("INPUT: ")
-        if choice == "1":
+        exit_choice = input("INPUT: ")
+        if exit_choice == "1":
             edit_task()
             break
-        elif choice == "2":
+        elif exit_choice == "2":
             task_manager()
             break
         else:
@@ -987,6 +1009,16 @@ def delete_task():
     time.sleep(0.2)
     cur.execute(f"SELECT * FROM {user_name} ORDER BY Due_date")
     rows = cur.fetchall()
+    if not rows:  # No incomplete or overdue tasks
+        time.sleep(0.18)
+        print("╔═══════════════════════════════════════╗")
+        print("║              You have no              ║")
+        print("║            tasks to delete.           ║")
+        print("║       Returning to the main menu.     ║")
+        print("╚═══════════════════════════════════════╝")
+        time.sleep(0.18)
+        task_manager()
+        return
     columns = [desc[0] for desc in cur.description]
     print(tabulate(rows, headers=columns, tablefmt='double_grid'))
     time.sleep(0.18)
@@ -1054,11 +1086,11 @@ def delete_task():
             print("║   (1. Delete again, 2. Back to menu): ║")
             print("╚═══════════════════════════════════════╝")
 
-            choice = input("INPUT: ")
-            if choice == "1":
+            exit_choice = input("INPUT: ")
+            if exit_choice == "1":
                 delete_task()
                 break
-            elif choice == "2":
+            elif exit_choice == "2":
                 task_manager()
                 break
             else:
@@ -1128,11 +1160,11 @@ def add_points():
         print("║    (1. Add points, 2. Back to menu):  ║")
         print("╚═══════════════════════════════════════╝")
 
-        choice = input("INPUT: ")
-        if choice == "1":
+        exit_choice = input("INPUT: ")
+        if exit_choice == "1":
             add_points()
             break
-        elif choice == "2":
+        elif exit_choice == "2":
             parent_menu()
             break
         else:
@@ -1243,11 +1275,11 @@ def add_reward():
         print("║     (1. Add reward, 2. Back to menu)  ║")
         print("╚═══════════════════════════════════════╝")
 
-        choice = input("INPUT:")
-        if choice == "1":
+        exit_choice = input("INPUT:")
+        if exit_choice == "1":
             add_reward()
             break
-        elif choice == "2":
+        elif exit_choice == "2":
             parent_menu()
             break
         else:
@@ -1639,7 +1671,7 @@ def update_overdue_tasks():
     if count == 0:
         return
     else:
-        cur.execute(f"UPDATE {user_name} SET Status = 'Overdue' WHERE Due_date < '{current_date}'")
+        cur.execute(f"UPDATE {user_name} SET Status = 'Overdue' WHERE Due_date < '{current_date}' AND Status != 'Complete'")
         con.commit()
 
 login_menu()
