@@ -114,7 +114,6 @@ def signup():
             print("║      Username should be between       ║")
             print("║         8 and 20 characters.          ║")
             print("╚═══════════════════════════════════════╝")
-
             continue
         break
 
@@ -141,7 +140,7 @@ def signup():
 
         confirm_password = input("INPUT: ")
         
-        if password != confirm_password:
+        if password != confirm_password:  #To check if password is the same as confirm_password
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
             print("║        Passwords do not match.        ║")
@@ -154,15 +153,14 @@ def signup():
             print("║ - The password must be longer than 8  ║")
             print("║   characters.                         ║")
             print("╚═══════════════════════════════════════╝")
-
             continue
 
-        confirm_password = encrypt(password)  #Encrypt
+        confirm_password = encrypt(password)  #Encrypt the password
         encrypted_password = confirm_password[0]
-        key = confirm_password[1]
+        key = confirm_password[1] #stores the key
         break
         
-    if NeedParent_choice == "2": 
+    if NeedParent_choice == "2": #Connects parent account with the child account
         while True:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -207,7 +205,6 @@ def signup():
                         print("╔═══════════════════════════════════════╗")
                         print("║           User is not valid           ║")
                         print("╚═══════════════════════════════════════╝")
-
                         continue
                     break
                 break
@@ -216,9 +213,8 @@ def signup():
                 print("╔═══════════════════════════════════════╗")
                 print("║   Then please create a child account  ║")
                 print("╚═══════════════════════════════════════╝")
-
                 signup()
-                break
+                return
             else:
                 time.sleep(0.18)
                 print("╔═══════════════════════════════════════╗")
@@ -227,7 +223,6 @@ def signup():
 
                 continue
 
-        
     while True:
         time.sleep(0.18)
         print("╔═══════════════════════════════════════╗")
@@ -244,9 +239,8 @@ def signup():
             print("╔═══════════════════════════════════════╗")
             print("║        Registration cancelled.        ║")
             print("╚═══════════════════════════════════════╝")
-
             signup()
-            break
+            return
         elif user_input.lower() == "y":
             data = [user_name, encrypted_password, key, parent, child]
             with open('dat.csv', mode='a', newline='') as file:
@@ -258,18 +252,18 @@ def signup():
                 cur.execute(f"INSERT INTO points VALUES ('{user_name}', 0)")
                 con.commit()
                 main_menu()
-                break
+                return
             if NeedParent_choice == "2":
                 user_name = child
             main_menu()
-            break
+            return
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
             print("║  Invalid input. Please enter y and n  ║")
             print("╚═══════════════════════════════════════╝")
 
-def login():
+def login(): #Login
     while True:
         global user_name
         global access_type
@@ -285,7 +279,7 @@ def login():
         print("╚═══════════════════════════════════════╝")
 
         user_name = input("INPUT:")
-        with open('dat.csv', mode='r') as file:
+        with open('dat.csv', mode='r') as file:  #Reads the CSV file to find the row in which the account details are stored
             reader = csv.reader(file)
             rows = list(reader)
         found_user = False
@@ -299,27 +293,26 @@ def login():
                     print("╚═══════════════════════════════════════╝")
                     password = input("INPUT: ")
                     key = int(row[2])
-                    decrypted_password = decrypt(row[1], key)    
-                    if password == decrypted_password:
+                    decrypted_password = decrypt(row[1], key) #Decrypt the password    
+                    if password == decrypted_password:  #checks the password is correct
                         time.sleep(0.18)
-                        current_date = date.today()
+                        current_date = date.today() 
                         print("╔═══════════════════════════════════════╗")
                         print("║           Login successful            ║")
                         print("╚═══════════════════════════════════════╝")
-                        if row[3] == "True":
+                        if row[3] == "True": #Sets the access_type and username
                             access_type = "Parent"
                             user_name = row[4]
                         else:
                             access_type = "Child"
                         update_overdue_tasks()
                         main_menu()
-                        break
+                        return
                     else:
                         time.sleep(0.18)
                         print("╔═══════════════════════════════════════╗")
                         print("║  Invalid password. Please try again.  ║")
                         print("╚═══════════════════════════════════════╝")
-
                         continue
         
         if not found_user:
@@ -327,29 +320,28 @@ def login():
             print("╔═══════════════════════════════════════╗")
             print("║           User is not valid           ║")
             print("╚═══════════════════════════════════════╝")
-
-            time.sleep(0.18)
-            print("╔═══════════════════════════════════════╗")
-            print("║   If you want to create an account,   ║")
-            print("║    please enter (1. yes, 2. no):      ║")
-            print("╚═══════════════════════════════════════╝")
-
-            ch = input("INPUT: ")
-            if ch == "1":
-                signup()
-                break
-            elif ch == "2":
-                login()
-                break
-            else:
+            while True:
                 time.sleep(0.18)
                 print("╔═══════════════════════════════════════╗")
-                print("║  Invalid input. Please enter 1 or 2.  ║")
+                print("║ Would you like to create a new account║")
+                print("║                 1. Yes                ║")
+                print("║                 2. No                 ║")
                 print("╚═══════════════════════════════════════╝")
 
-                continue
-        break
-
+                exit_choice = input("INPUT: ")
+                if exit_choice == "1":
+                    signup()
+                    return
+                elif exit_choice == "2":
+                    login()
+                    return
+                else:
+                    time.sleep(0.18)
+                    print("╔═══════════════════════════════════════╗")
+                    print("║      Invalid Input. Please enter      ║")
+                    print("║               1 or 2                  ║")
+                    print("╚═══════════════════════════════════════╝")
+                    continue
 
 def login_menu():
     while True:
@@ -381,10 +373,10 @@ def login_menu():
 
         if choice == "1":
             signup()
-            break
+            return
         elif choice == "2":
             login()
-            break
+            return
         elif choice == "3":
             print("╔═══════════════════════════════════════╗")
             print("║       Thank you for using PyDO.       ║")
@@ -396,7 +388,6 @@ def login_menu():
             print("██║   ██║██║   ██║██║   ██║██║  ██║██╔══██╗  ╚██╔╝  ██╔══╝  ╚═╝")
             print("╚██████╔╝╚██████╔╝╚██████╔╝██████╔╝██████╔╝   ██║   ███████╗██╗")
             print(" ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═════╝    ╚═╝   ╚══════╝╚═╝")
-
             quit()
         else:
             print("╔═══════════════════════════════════════╗")
@@ -433,16 +424,22 @@ def main_menu():
 
         if choice == "1":
             task_manager()
+            return
         elif choice == "2":
             reward_manager()
+            return
         elif choice == "3":
             status()
+            return
         elif choice == "4" and access_type == "Child":
             login_menu()
+            return
         elif choice == "4" and access_type == "Parent":
             parent_menu()
+            return
         elif choice == "5" and access_type == "Parent":
             login_menu()
+            return
         else:
             if access_type == "Child":
                 time.sleep(0.18)
@@ -488,20 +485,28 @@ def task_manager():
         choice = input("INPUT: ")
         if choice == "1":
             view_tasks()
+            return
         elif choice == "2":
             view_overdue()
+            return
         elif choice == "3":
             set_completed_tasks()
+            return
         elif choice == "4":
             add_task()
+            return
         elif choice == "5":
             edit_task()
+            return
         elif choice == "6":
             delete_task()
+            return
         elif choice == "7":
             delete_all_tasks()
+            return
         elif choice == "8":
             main_menu()
+            return
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -531,10 +536,13 @@ def reward_manager():
 
         if choice == "1":
             view_rewards()
+            return
         elif choice == "2":
             claim_rewards()
+            return
         elif choice == "3":
             main_menu()
+            return
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -570,18 +578,25 @@ def parent_menu():
 
     if choice == "1":
         add_points()
+        return
     elif choice == "2":
         add_reward()
+        return
     elif choice == "3":
         edit_reward()
+        return
     elif choice == "4":
         delete_reward()
+        return
     elif choice == "5":
         delete_all_rewards()
+        return
     elif choice == "6":
         delete_account()
+        return
     elif choice == "7":
         main_menu()
+        return
     else:
         time.sleep(0.18)
         print("╔═══════════════════════════════════════╗")
@@ -613,12 +628,12 @@ def status():
             view_performances()
         elif choice == "2":
             view_completed_tasks()
-            break
+            return
         elif choice == "3":
             print(calculate_total_points())
         elif choice == "4":
             main_menu()
-            break
+            return
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -644,11 +659,11 @@ def view_tasks():
             choice = input("INPUT: ")
             if choice == "1":
                 task_manager()
-                break
+                return
             else:
                 time.sleep(0.18)
                 print("╔═══════════════════════════════════════╗")
-                print("║   Invalid input. Please enter only y  ║")
+                print("║   Invalid input. Please enter only 1  ║")
                 print("╚═══════════════════════════════════════╝")
 
 def set_completed_tasks():
@@ -724,10 +739,10 @@ def set_completed_tasks():
         exit_choice = input("INPUT: ")
         if exit_choice == "1":
             set_completed_tasks()
-            break
+            return
         elif exit_choice == "2":
             task_manager()
-            break
+            return
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -866,10 +881,10 @@ def add_task():
             exit_choice = input("INPUT: ")
             if exit_choice == "1":
                 add_task()
-                break
+                return
             elif exit_choice == "2":
                 task_manager()
-                break
+                return
             else:
                 time.sleep(0.18)
                 print("╔═══════════════════════════════════════╗")
@@ -994,10 +1009,10 @@ def edit_task():
         exit_choice = input("INPUT: ")
         if exit_choice == "1":
             edit_task()
-            break
+            return
         elif exit_choice == "2":
             task_manager()
-            break
+            return
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -1061,22 +1076,19 @@ def delete_task():
             print("╔═══════════════════════════════════════╗")
             print("║       Task deleted successfully!      ║")
             print("╚═══════════════════════════════════════╝")
-
             break
         elif conformation.lower() == "n":
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
             print("║          Task not deleted.            ║")
             print("╚═══════════════════════════════════════╝")
-
             task_manager()
-            break
+            return
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
             print("║Invalid input. Please enter only y or n║")
             print("╚═══════════════════════════════════════╝")
-
             continue
     while True:
             time.sleep(0.18)
@@ -1104,7 +1116,6 @@ def delete_task():
     print("║  Invalid task number, please enter a  ║")
     print("║              valid number             ║")
     print("╚═══════════════════════════════════════╝")
-
     delete_task()
 
 def add_points():
@@ -1163,10 +1174,10 @@ def add_points():
         exit_choice = input("INPUT: ")
         if exit_choice == "1":
             add_points()
-            break
+            return
         elif exit_choice == "2":
             parent_menu()
-            break
+            return
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -1211,15 +1222,14 @@ def delete_account():
                 print("║     Account deleted successfully.     ║")
                 print("╚═══════════════════════════════════════╝")
                 login_menu()
-                break
+                return
         elif confirm == "2":
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
             print("║       Account deletion canceled.      ║")
             print("╚═══════════════════════════════════════╝")
-
             parent_menu()
-            break
+            return
 
     time.sleep(0.18)
     print("╔═══════════════════════════════════════╗")
@@ -1278,10 +1288,10 @@ def add_reward():
         exit_choice = input("INPUT:")
         if exit_choice == "1":
             add_reward()
-            break
+            return
         elif exit_choice == "2":
             parent_menu()
-            break
+            return
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -1322,7 +1332,7 @@ def view_rewards():
         choice = input("INPUT: ")
         if choice == "1":
             reward_manager()
-            break
+            return
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -1463,7 +1473,7 @@ def view_completed_tasks():
         choice = input("INPUT: ")
         if choice == "1":
             status()
-            break
+            return
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
@@ -1657,7 +1667,7 @@ def view_overdue():
         choice = input("INPUT: ")
         if choice == "1":
             task_manager()
-            break
+            return
         else:
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
