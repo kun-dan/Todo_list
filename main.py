@@ -129,7 +129,8 @@ def signup():
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
             print("║      Password should be between       ║")
-            print("║         8 and 20 characters.          ║")
+            print("║    8 to 20 characters and much have   ║")
+            print("║        an alphabet and number.        ║")
             print("╚═══════════════════════════════════════╝")
             continue
         
