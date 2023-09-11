@@ -1430,6 +1430,8 @@ def claim_rewards():
         print("╔═══════════════════════════════════════╗")
         print("║       No rewards available yet.       ║")
         print("╚═══════════════════════════════════════╝")
+        reward_manager()
+        
 
 
 def calculate_total_points():
