@@ -1400,6 +1400,7 @@ def claim_rewards():
                         print("║ You don't have enough points to redeem║")
                         print("║             this reward.              ║")
                         print("╚═══════════════════════════════════════╝")
+                        reward_manager()
                 else:
                     time.sleep(0.18)
                     print("╔═══════════════════════════════════════╗")
