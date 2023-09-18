@@ -1381,7 +1381,6 @@ def claim_rewards():
                 if 0 <= choice < len(rewards):
                     asked_reward_name, reward_points = rewards[choice]
                     if total_points >= reward_points:
-                        print(rewards)
                         time.sleep(0.18)
                         print("╔═══════════════════════════════════════╗")
                         print("║      Congratulations! You redeemed    ║")
@@ -1394,6 +1393,7 @@ def claim_rewards():
                             for reward in rewards:
                                 reward_name, reward_points = reward
                                 file.write(f"{reward_name},{reward_points}\n")
+                        reward_manager()
                     else:
                         time.sleep(0.18)
                         print("╔═══════════════════════════════════════╗")
