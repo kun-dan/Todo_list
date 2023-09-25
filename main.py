@@ -380,7 +380,7 @@ def login_menu():
             return
         elif choice == "3":
             print("╔═══════════════════════════════════════╗")
-            print("║       Thank you for using PyDO.       ║")
+            print("║       Thank you for using Py-DO.      ║")
             print("║  Stay organized and stay productive!  ║")
             print("╚═══════════════════════════════════════╝")
             print(" ██████╗  ██████╗  ██████╗ ██████╗ ██████╗ ██╗   ██╗███████╗██╗")
