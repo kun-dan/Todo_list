@@ -344,7 +344,7 @@ def login(): #Login
                     print("╚═══════════════════════════════════════╝")
                     continue
 
-def login_menu():
+def homepage():
     while True:
         print("  ██████╗ ██╗   ██╗     ██████╗  ██████╗ ")
         print("  ██╔══██╗╚██╗ ██╔╝     ██╔══██╗██╔═══██╗")
@@ -433,13 +433,13 @@ def main_menu():
             status()
             return
         elif choice == "4" and access_type == "Child":
-            login_menu()
+            homepage()
             return
         elif choice == "4" and access_type == "Parent":
             parent_menu()
             return
         elif choice == "5" and access_type == "Parent":
-            login_menu()
+            homepage()
             return
         else:
             if access_type == "Child":
@@ -1222,7 +1222,7 @@ def delete_account():
                 print("╔═══════════════════════════════════════╗")
                 print("║     Account deleted successfully.     ║")
                 print("╚═══════════════════════════════════════╝")
-                login_menu()
+                homepage()
                 return
         elif confirm == "2":
             time.sleep(0.18)
@@ -1694,4 +1694,4 @@ def update_overdue_tasks():
         cur.execute(f"UPDATE {user_name} SET Status = 'Overdue' WHERE Due_date < '{current_date}' AND Status != 'Complete'")
         con.commit()
 
-login_menu()
+homepage()
