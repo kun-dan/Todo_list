@@ -233,7 +233,7 @@ def signup():
         print("║ (y - yes / n - no):                   ║")
         print("╚═══════════════════════════════════════╝")
 
-        user_input = input("INPUT:")
+        user_input = input("INPUT: ")
 
         if user_input.lower() == "n":
             time.sleep(0.18)
@@ -279,7 +279,7 @@ def login(): #Login
         print("║         Enter your username:          ║")
         print("╚═══════════════════════════════════════╝")
 
-        user_name = input("INPUT:")
+        user_name = input("INPUT: ")
         with open('dat.csv', mode='r') as file:  #Reads the CSV file to find the row in which the account details are stored
             reader = csv.reader(file)
             rows = list(reader)
@@ -757,7 +757,7 @@ def add_task():
     print("╔═══════════════════════════════════════╗")
     print("║           Enter the task:             ║")
     print("╚═══════════════════════════════════════╝")
-    task = input("INPUT:")
+    task = input("INPUT: ")
     if access_type == "Child":
         while True:
             try:
@@ -787,7 +787,7 @@ def add_task():
                 elif date_input.lower() == "tomorrow":
                     date_input = current_date + timedelta(days=1)
                 elif date_input.lower().startswith("in"):
-                    day = date_input[2:].strip() 
+                    day = date_input[2:].split()
                     if day.isdigit():
                         date_input = current_date + timedelta(days=int(day))
                     else:
