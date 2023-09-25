@@ -1579,6 +1579,8 @@ def edit_reward():
         print("╔═══════════════════════════════════════╗")
         print("║         File does not exist.          ║")
         print("╚═══════════════════════════════════════╝")
+        time.sleep(0.18)
+        parent_menu()
 
 def delete_reward():
     time.sleep(0.2)
@@ -1616,7 +1618,6 @@ def delete_reward():
                 print(f"║      Reward '{deleted_reward}'        ║")
                 print("║         deleted successfully.         ║")
                 print("╚═══════════════════════════════════════╝")
-
                 parent_menu()
             else:
                 time.sleep(0.18)
@@ -1638,6 +1639,8 @@ def delete_reward():
         print("╔═══════════════════════════════════════╗")
         print("║         File does not exist.          ║")
         print("╚═══════════════════════════════════════╝")
+        time.sleep(0.18)
+        parent_menu()
 
 def delete_all_rewards():
     time.sleep(0.2)
@@ -1648,12 +1651,15 @@ def delete_all_rewards():
         print("╔═══════════════════════════════════════╗")
         print("║   All rewards deleted successfully.   ║")
         print("╚═══════════════════════════════════════╝")
-
+        time.sleep(0.18)
         parent_menu()
     except FileNotFoundError:
         print("╔═══════════════════════════════════════╗")
         print("║         File does not exist.          ║")
         print("╚═══════════════════════════════════════╝")
+        time.sleep(0.18)
+        parent_menu()
+
 def view_overdue():
     time.sleep(0.2)
     cur.execute(f"SELECT Tasks, Due_date, Points, Status FROM {user_name} WHERE Status = 'Overdue' ORDER BY Due_date")
