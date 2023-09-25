@@ -1,6 +1,6 @@
 # PyDo - Command-line Task Manager Application
 
-PyDo is a feature-rich command-line task manager application built using Python. It enables users to efficiently manage tasks, track performance, and redeem rewards for completed tasks. The application also incorporates a child and parent account system, allowing parents to oversee and manage tasks and rewards for their children.
+PyDo is a feature-rich command-line task manager application built using Python **made by Sridhar**. It enables users to efficiently manage tasks, track performance, and redeem rewards for completed tasks. The application also incorporates a child and parent account system, allowing parents to oversee and manage tasks and rewards for their children.
 
 ## Table of Contents
 
