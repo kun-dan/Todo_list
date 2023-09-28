@@ -669,7 +669,7 @@ def view_tasks():
 
 def set_completed_tasks():
     time.sleep(0.2)
-    cur.execute(f"SELECT * FROM {user_name} WHERE Status in ('Incomplete','OVERDUE') ORDER BY Due_date")
+    cur.execute(f"SELECT * FROM {user_name} WHERE Status in ('Incomplete','Overdue') ORDER BY Due_date")
     rows = cur.fetchall()
     if not rows:  # No incomplete or overdue tasks
         time.sleep(0.18)
@@ -764,9 +764,10 @@ def add_task():
                 cur.execute(f"SELECT Task_id, Tasks, Due_date, Points FROM {user_name} ORDER BY Due_date")
                 rows = cur.fetchall()
                 columns = [desc[0] for desc in rows]
-                task_id = random.randint(0,99999999)
                 while True:
                     task_id = random.randint(0,99999999)
+                    if task_id % 10 == 0:
+                        continue
                     if task_id not in columns:
                         time.sleep(0.18)
                         print("╔═══════════════════════════════════════╗")
@@ -787,7 +788,7 @@ def add_task():
                 elif date_input.lower() == "tomorrow":
                     date_input = current_date + timedelta(days=1)
                 elif date_input.lower().startswith("in"):
-                    day = date_input[2:].split()
+                    day = date_input[2:].strip()
                     if day.isdigit():
                         date_input = current_date + timedelta(days=int(day))
                     else:
@@ -1690,8 +1691,20 @@ def update_overdue_tasks():
     count = cur.fetchone()[0]
     if count == 0:
         return
-    else:
-        cur.execute(f"UPDATE {user_name} SET Status = 'Overdue' WHERE Due_date < '{current_date}' AND Status != 'Complete'")
-        con.commit()
+    cur.execute(f"SELECT Task_ID FROM {user_name} WHERE Due_date < '{current_date}' AND Status != 'Complete'")
+    overdue_task_ids = cur.fetchall()
+    if overdue_task_ids:
+        for i in overdue_task_ids:
+            a = i[0]
+            if a % 10 != 0:
+                cur.execute(f"UPDATE points SET points = points - 10 WHERE username = '{user_name}'")
+            else: 
+                while True:
+                    retask_id = random.randint(0,99999999)
+                    if retask_id % 10 == 0:
+                        cur.execute(f"UPDATE {user_name} SET Task_ID = '{retask_id}' WHERE Task_ID = '{a}' ")
+                        break
+    cur.execute(f"UPDATE {user_name} SET Status = 'Overdue' WHERE Due_date < '{current_date}' AND Status != 'Complete'")
+    con.commit()
 
 homepage()
