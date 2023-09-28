@@ -128,9 +128,11 @@ def signup():
         if len(password) < 8 or password.isnumeric() or password.isalpha():  #Checks if password length is in between (8,20) and has has at least 1 alphabet.
             time.sleep(0.18)
             print("╔═══════════════════════════════════════╗")
-            print("║      Password should be between       ║")
-            print("║    8 to 20 characters and much have   ║")
-            print("║        an alphabet and number.        ║")
+            print("║   Please keep the following in mind:  ║")
+            print("║ - The password must have at least 1   ║")
+            print("║   letter and 1 number.                ║")
+            print("║ - The password must be longer than 8  ║")
+            print("║   characters.                         ║")
             print("╚═══════════════════════════════════════╝")
             continue
         
@@ -1706,5 +1708,6 @@ def update_overdue_tasks():
                         break
     cur.execute(f"UPDATE {user_name} SET Status = 'Overdue' WHERE Due_date < '{current_date}' AND Status != 'Complete'")
     con.commit()
+
 
 homepage()
