@@ -1529,7 +1529,7 @@ def edit_reward():
         print("║            Current Rewards:           ║")
         for i, reward in enumerate(rewards, start=1):
             reward_name, reward_points = reward
-            print(f"{i}. {reward_name} - {reward_points} points")
+            print(f"   {i}. {reward_name} - {reward_points} points")
         print("╚═══════════════════════════════════════╝")
         time.sleep(0.18)
         print("╔═══════════════════════════════════════╗")
