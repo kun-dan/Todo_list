@@ -1709,5 +1709,4 @@ def update_overdue_tasks():
     cur.execute(f"UPDATE {user_name} SET Status = 'Overdue' WHERE Due_date < '{current_date}' AND Status != 'Complete'")
     con.commit()
 
-
 homepage()
