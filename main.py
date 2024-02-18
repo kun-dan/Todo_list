@@ -670,6 +670,7 @@ def view_tasks():
                 print("╚═══════════════════════════════════════╝")
 
 def set_completed_tasks():
+    update_overdue_tasks()
     time.sleep(0.2)
     cur.execute(f"SELECT * FROM {user_name} WHERE Status in ('Incomplete','Overdue') ORDER BY Due_date")
     rows = cur.fetchall()
@@ -1566,7 +1567,7 @@ def edit_reward():
                 print("╔═══════════════════════════════════════╗")
                 print("║         Invalid reward number.        ║")
                 print("╚═══════════════════════════════════════╝")
-                view_rewards()
+
         elif choice.lower() == 'q':
             parent_menu()
         else:
@@ -1663,6 +1664,7 @@ def delete_all_rewards():
         parent_menu()
 
 def view_overdue():
+    update_overdue_tasks()
     time.sleep(0.2)
     cur.execute(f"SELECT Tasks, Due_date, Points, Status FROM {user_name} WHERE Status = 'Overdue' ORDER BY Due_date")
     rows = cur.fetchall()
@@ -1699,13 +1701,13 @@ def update_overdue_tasks():
             a = i[0]
             if a % 10 != 0:
                 cur.execute(f"UPDATE points SET points = points - 10 WHERE username = '{user_name}'")
-            else: 
-                while True:
-                    retask_id = random.randint(0,99999999)
-                    if retask_id % 10 == 0:
-                        cur.execute(f"UPDATE {user_name} SET Task_ID = '{retask_id}' WHERE Task_ID = '{a}' ")
-                        break
+                retask_id = random.randint(0,99999999)
+                retask_id *= 10
+                cur.execute(f"UPDATE {user_name} SET Task_ID = '{retask_id}' WHERE Task_ID = '{a}' ")
+        
+                
     cur.execute(f"UPDATE {user_name} SET Status = 'Overdue' WHERE Due_date < '{current_date}' AND Status != 'Complete'")
     con.commit()
+    return
 
 homepage()
