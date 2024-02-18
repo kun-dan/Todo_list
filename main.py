@@ -1561,7 +1561,6 @@ def edit_reward():
                 print("╔═══════════════════════════════════════╗")
                 print("║       Reward edited successfully.     ║")
                 print("╚═══════════════════════════════════════╝")
-                view_rewards()
             else:
                 time.sleep(0.18)
                 print("╔═══════════════════════════════════════╗")
