@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 con = mycon.connect(
     host = 'localhost', 
     user='root', 
-    password ='12345678'
+    password ='pass'
     )
 #Creates the cursor
 cur = con.cursor()
